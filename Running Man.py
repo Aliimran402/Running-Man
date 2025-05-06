@@ -23,11 +23,7 @@ def draw_shapes():
 
 
 def keyboard_listener(): #keyborad inputs
-
-
-
-def mouse_listener(): #mouse inputs
-
+   
 
 
 def special_key_listener(): #special key inputs
@@ -39,7 +35,8 @@ def  setup_camera(): #viewing camera 3rd person view
 
 
 def idle(): #functions keeps running in backgound
-
+    update_game()
+    glutPostRedisplay()
 
 
 def show_screen(): #displays the screen
