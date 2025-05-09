@@ -1,6 +1,3 @@
-#cse423_project
-    #runnning_man
-
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -43,7 +40,7 @@ SPEED_INCREMENT = 0.15
 game_start_time = time.time()
 
 POWERUP_TYPES = ['magnet', 'shield']
-POWERUP_PROBABILITY = 0.05
+POWERUP_PROBABILITY = 0.1
 POWERUP_DURATION = 10
 active_powerups = {
     'magnet': {'active': False, 'end_time': 0},
@@ -63,8 +60,8 @@ COLORS = {
     'shield': (0.0, 1.0, 0.7)
 }
 
-
 def reset_game():
+
     global game_state, player_pos, player_lane, player_jumping
     global jump_height, jump_velocity, path_segments, obstacles, coins, powerups
     global score, coins_collected, game_speed, game_start_time, total_distance
@@ -95,6 +92,7 @@ def reset_game():
     game_speed = 2.0
     game_start_time = time.time()
     total_distance = 0
+    current_direction = 0
     
 def generate_path_segment():
     global path_segments, current_direction
@@ -613,8 +611,7 @@ def update_game():
                     continue
                 elif obstacle['type'] == 'tree' and jump_height > 20:
                     continue
-                elif obstacle['type'] == 'low_barrier' and player_jumping:
-                    continue
+               
                 
                 game_state = GAME_OVER
     
@@ -730,7 +727,7 @@ def showScreen():
     
     setup_camera()
     
-    draw_background()
+    draw_skybox()
     
     draw_path()
     draw_obstacles()
@@ -753,6 +750,17 @@ def showScreen():
     elif game_state == GAME_PAUSED:
         draw_text(400, 400, "GAME PAUSED", GLUT_BITMAP_TIMES_ROMAN_24)
         draw_text(350, 350, "Press 'P' to resume", GLUT_BITMAP_HELVETICA_18)    
+    else:
+        draw_game_over_screen()
+    
+    draw_text(800, 730, "A/D: Move")
+    draw_text(800, 710, "W: Jump")
+    draw_text(800, 690, "R: Restart")
+    draw_text(800, 670, "P: Pause/Resume")
+    
+    glutSwapBuffers()
+    
+
     
 
 
