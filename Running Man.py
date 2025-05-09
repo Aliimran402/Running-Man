@@ -97,7 +97,7 @@ def reset_game():
     
     score = 0
     coins_collected = 0
-    game_speed = 2.5
+    game_speed = 2.0
     game_start_time = time.time()
     total_distance = 0
     
