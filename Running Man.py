@@ -538,15 +538,15 @@ def handle_movement():
 
 
 
-def keyboard_listener(): #keyborad inputs
+def keyboard_listener(): 
    
 
 
-def specialkey_listener(): #special key inputs
+def specialkey_listener(): 
 
 
 
-def  setup_camera(): #viewing camera 3rd person view
+def  setup_camera(): 
 
 
     
