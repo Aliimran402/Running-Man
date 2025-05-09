@@ -69,13 +69,12 @@ COLORS = {
 
 
 def reset_game():
-    global game_state, player_pos, player_lane, player_jumping
+    global game_state, player_lane, player_jumping
     global jump_height, jump_velocity, path_segments, obstacles, coins, powerups
     global score, coins_collected, game_speed, game_start_time, total_distance
-    global current_direction, active_powerups
+    global active_powerups
     
     game_state = GAME_RUNNING
-    player_pos = (0, 0, 0)
     player_lane = 1
     player_jumping = False
     jump_height = 0
@@ -86,22 +85,19 @@ def reset_game():
     coins = []
     powerups = []
     
-    # Reset power-up states
     active_powerups = {
         'magnet': {'active': False, 'end_time': 0},
         'shield': {'active': False, 'end_time': 0}
     }
     
-    # Initialize the path
     for i in range(MAX_VISIBLE_SEGMENTS):
         generate_path_segment()
     
     score = 0
     coins_collected = 0
-    game_speed = 2.0# Very slow speed for easy gameplay
+    game_speed = 0.3
     game_start_time = time.time()
     total_distance = 0
-    current_direction = 0
     
 def generate_path_segment():
     
