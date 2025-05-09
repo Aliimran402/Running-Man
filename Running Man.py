@@ -314,31 +314,17 @@ def draw_obstacles():
         glColor3f(*COLORS['obstacle'])
         
         if obstacle['type'] == 'rock':
-            # Draw a rock
             glTranslatef(0, 0, 0)
-            glutSolidSphere(15, 8, 8)
+            glutSolidSphere(12, 8, 8)
         elif obstacle['type'] == 'tree':
-            # Draw a tree
-            # Trunk
             glColor3f(0.55, 0.27, 0.07)
-            glTranslatef(0, 10, 0)
+            glTranslatef(0, 23, 0)
             glRotatef(90, 1, 0, 0)
-            gluCylinder(gluNewQuadric(), 5, 5, 25, 8, 2)
+            gluCylinder(gluNewQuadric(), 12, 12, 58, 8, 2)
             
-            # Leaves
             glColor3f(0.0, 0.5, 0.0)
-            glTranslatef(0, 0, -30)
-            glutSolidCone(20, 40, 8, 8)
-        elif obstacle['type'] == 'barrier':
-            # Draw a barrier
-            glColor3f(0.6, 0.3, 0.1)
-            glScalef(LANE_WIDTH*0.8, 15, 5)
-            glutSolidCube(1)
-        elif obstacle['type'] == 'low_barrier':
-            # Draw a low barrier that can be ducked under
-            glColor3f(0.6, 0.3, 0.1)
-            glScalef(LANE_WIDTH*0.8, 8, 5)  # Lower height for ducking
-            glutSolidCube(1)
+            glTranslatef(0, 0, -69)
+            glutSolidCone(46, 92, 8, 8)
         
         glPopMatrix()
 
@@ -450,6 +436,100 @@ def draw_game_over_screen():
             
     
 def update_game():
+    global total_distance, path_segments, obstacles, coins, powerups
+    global player_jumping, jump_height, jump_velocity
+    global score, game_speed, game_state, coins_collected
+    global active_powerups
+    
+    if game_state == GAME_OVER:
+        return
+    
+    total_distance += game_speed
+    
+    if player_jumping:
+        jump_height += jump_velocity
+        jump_velocity -= GRAVITY
+        
+        if jump_height <= 0:
+            jump_height = 0
+            jump_velocity = 0
+            player_jumping = False
+    
+    for i in range(len(path_segments)):
+        path_segments[i]['z'] += game_speed
+    
+    if path_segments[0]['z'] > PATH_SEGMENT_LENGTH:
+        path_segments.pop(0)
+        generate_path_segment()
+    
+    for i in range(len(obstacles)):
+        obstacles[i]['z'] += game_speed
+    
+    obstacles = [obs for obs in obstacles if obs['z'] < PATH_SEGMENT_LENGTH]
+    
+    for i in range(len(coins)):
+        coins[i]['z'] += game_speed
+    
+    coins = [coin for coin in coins if coin['z'] < PATH_SEGMENT_LENGTH]
+    
+    for i in range(len(powerups)):
+        powerups[i]['z'] += game_speed
+    
+    powerups = [p for p in powerups if p['z'] < PATH_SEGMENT_LENGTH]
+    
+    player_x = (player_lane - 1) * LANE_WIDTH
+    for powerup in powerups:
+        if not powerup['collected']:
+            dx = abs(player_x - powerup['x'])
+            dz = abs(powerup['z'])           
+            if dx < 30 and dz < 30:
+                powerup['collected'] = True
+                active_powerups[powerup['type']]['active'] = True
+                active_powerups[powerup['type']]['end_time'] = time.time() + POWERUP_DURATION
+    
+    current_time = time.time()
+    for powerup_type in active_powerups:
+        if active_powerups[powerup_type]['active'] and current_time > active_powerups[powerup_type]['end_time']:
+            active_powerups[powerup_type]['active'] = False
+    
+    if active_powerups['magnet']['active']:
+        for coin in coins:
+            if not coin['collected']:
+                dx = player_x - coin['x']
+                dz = -coin['z']
+                distance = math.sqrt(dx*dx + dz*dz)                
+                if distance < MAGNET_RANGE:
+                    move_speed = 5.0
+                    if distance > 0:
+                        coin['x'] += (dx/distance) * move_speed
+                        coin['z'] += (dz/distance) * move_speed
+    
+    if not active_powerups['shield']['active']:
+        for obstacle in obstacles:
+            dx = abs(player_x - obstacle['x'])
+            dz = abs(obstacle['z'])            
+            if dx < 30 and dz < JUMP_WINDOW:
+                if obstacle['type'] == 'rock' and jump_height > 10:
+                    continue
+                elif obstacle['type'] == 'tree' and jump_height > 20:
+                    continue
+                #elif obstacle['type'] == 'low_barrier' and player_jumping:
+                    #continue
+                
+                game_state = GAME_OVER
+    
+    for coin in coins:
+        if not coin['collected']:
+            dx = abs(player_x - coin['x'])
+            dz = abs(coin['z'])
+            
+            if dx < 30 and dz < 30:
+                coin['collected'] = True
+                coins_collected += 1
+                score = coins_collected
+                if game_speed < MAX_SPEED:
+                    game_speed += SPEED_INCREMENT
+                      
     
 
 def handle_movement():                    
