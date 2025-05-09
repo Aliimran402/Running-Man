@@ -665,6 +665,24 @@ def specialkey_listener(key):
 
 
 def  setup_camera(): 
+    global camera_pos, player_lane, jump_height
+    
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(45, 1.25, 0.1, 2000)
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+    
+    player_x = (player_lane - 1) * LANE_WIDTH
+    camera_target = (player_x, jump_height + 15, 0)
+    
+    camera_x = player_x
+    camera_y = jump_height + 65
+    camera_z = 150
+    
+    gluLookAt(camera_x, camera_y, camera_z,
+              camera_target[0], camera_target[1], camera_target[2],
+              0, 1, 0)
 
 
     
