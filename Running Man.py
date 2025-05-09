@@ -39,7 +39,7 @@ OBSTACLE_DENSITY_FACTOR = 0.005
 
 score = 0  
 coins_collected = 0
-game_speed = 2.0 
+game_speed = 2.5 
 stored_game_speed = 2.0  
 MAX_SPEED = 10.0
 SPEED_INCREMENT = 0.15 
@@ -97,7 +97,7 @@ def reset_game():
     
     score = 0
     coins_collected = 0
-    game_speed = 2.0
+    game_speed = 2.5
     game_start_time = time.time()
     total_distance = 0
     
