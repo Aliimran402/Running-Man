@@ -166,7 +166,7 @@ def generate_path_segment():
             'collected': False,
             'angle': segment_angle
         })
-    
+   
     
 def draw_text(x, y, text, font=GLUT_BITMAP_HELVETICA_18):
     glColor3f(*COLORS['text'])
@@ -331,61 +331,61 @@ def draw_player():
 
 
 def draw_path():
-        global path_segments, total_distance
-        
-        for segment in path_segments:
-            glPushMatrix()
-            glTranslatef(segment['x'], 0, segment['z'])
-            glRotatef(segment['angle'], 0, 1, 0)
-            
-            glBegin(GL_QUADS)
-            glColor3f(*COLORS['path'])
-            
-            path_width = LANE_WIDTH * 3
-            
-            glVertex3f(-path_width/2, -5, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(path_width/2, -5, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(path_width/2, -5, -PATH_SEGMENT_LENGTH/2)
-            glVertex3f(-path_width/2, -5, -PATH_SEGMENT_LENGTH/2)
-            
-            wall_height = 30
-            
-            glColor3f(*COLORS['temple_stone'])
-            glVertex3f(-path_width/2, -5, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(-path_width/2, -5, -PATH_SEGMENT_LENGTH/2)
-            glVertex3f(-path_width/2, wall_height, -PATH_SEGMENT_LENGTH/2)
-            glVertex3f(-path_width/2, wall_height, PATH_SEGMENT_LENGTH/2)
-            
-            glVertex3f(path_width/2, -5, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(path_width/2, wall_height, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(path_width/2, wall_height, -PATH_SEGMENT_LENGTH/2)
-            glVertex3f(path_width/2, -5, -PATH_SEGMENT_LENGTH/2)
-            
-            glVertex3f(-path_width/2-10, wall_height, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(-path_width/2, wall_height, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(-path_width/2, wall_height, -PATH_SEGMENT_LENGTH/2)
-            glVertex3f(-path_width/2-10, wall_height, -PATH_SEGMENT_LENGTH/2)
-            
-            glVertex3f(path_width/2, wall_height, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(path_width/2+10, wall_height, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(path_width/2+10, wall_height, -PATH_SEGMENT_LENGTH/2)
-            glVertex3f(path_width/2, wall_height, -PATH_SEGMENT_LENGTH/2)
-            
-            glEnd()
-            
-            glBegin(GL_LINES)
-            glColor3f(0.8, 0.8, 0.8)
-            
-            glVertex3f(-LANE_WIDTH, -4.99, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(-LANE_WIDTH, -4.99, -PATH_SEGMENT_LENGTH/2)
-            
-            glVertex3f(LANE_WIDTH, -4.99, PATH_SEGMENT_LENGTH/2)
-            glVertex3f(LANE_WIDTH, -4.99, -PATH_SEGMENT_LENGTH/2)
-            
-            glEnd()
-            
-            glPopMatrix()
+    global path_segments, total_distance
     
+    for segment in path_segments:
+        glPushMatrix()
+        glTranslatef(segment['x'], 0, segment['z'])
+        glRotatef(segment['angle'], 0, 1, 0)
+        
+        glBegin(GL_QUADS)
+        glColor3f(*COLORS['path'])
+        
+        path_width = LANE_WIDTH * 3
+        
+        glVertex3f(-path_width/2, -5, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(path_width/2, -5, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(path_width/2, -5, -PATH_SEGMENT_LENGTH/2)
+        glVertex3f(-path_width/2, -5, -PATH_SEGMENT_LENGTH/2)
+        
+        wall_height = 30
+        
+        glColor3f(*COLORS['temple_stone'])
+        glVertex3f(-path_width/2, -5, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(-path_width/2, -5, -PATH_SEGMENT_LENGTH/2)
+        glVertex3f(-path_width/2, wall_height, -PATH_SEGMENT_LENGTH/2)
+        glVertex3f(-path_width/2, wall_height, PATH_SEGMENT_LENGTH/2)
+        
+        glVertex3f(path_width/2, -5, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(path_width/2, wall_height, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(path_width/2, wall_height, -PATH_SEGMENT_LENGTH/2)
+        glVertex3f(path_width/2, -5, -PATH_SEGMENT_LENGTH/2)
+        
+        glVertex3f(-path_width/2-10, wall_height, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(-path_width/2, wall_height, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(-path_width/2, wall_height, -PATH_SEGMENT_LENGTH/2)
+        glVertex3f(-path_width/2-10, wall_height, -PATH_SEGMENT_LENGTH/2)
+        
+        glVertex3f(path_width/2, wall_height, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(path_width/2+10, wall_height, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(path_width/2+10, wall_height, -PATH_SEGMENT_LENGTH/2)
+        glVertex3f(path_width/2, wall_height, -PATH_SEGMENT_LENGTH/2)
+        
+        glEnd()
+        
+        glBegin(GL_LINES)
+        glColor3f(0.8, 0.8, 0.8)
+        
+        glVertex3f(-LANE_WIDTH, -4.99, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(-LANE_WIDTH, -4.99, -PATH_SEGMENT_LENGTH/2)
+        
+        glVertex3f(LANE_WIDTH, -4.99, PATH_SEGMENT_LENGTH/2)
+        glVertex3f(LANE_WIDTH, -4.99, -PATH_SEGMENT_LENGTH/2)
+        
+        glEnd()
+        
+        glPopMatrix()
+
     
 def draw_obstacles():    
     global obstacles
