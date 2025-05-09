@@ -303,6 +303,45 @@ def draw_path():
     
     
 def draw_obstacles():    
+    global obstacles
+    
+    for obstacle in obstacles:
+        glPushMatrix()
+        
+        glTranslatef(obstacle['x'], 0, obstacle['z'])
+        glRotatef(obstacle['angle'], 0, 1, 0)
+        
+        glColor3f(*COLORS['obstacle'])
+        
+        if obstacle['type'] == 'rock':
+            # Draw a rock
+            glTranslatef(0, 0, 0)
+            glutSolidSphere(15, 8, 8)
+        elif obstacle['type'] == 'tree':
+            # Draw a tree
+            # Trunk
+            glColor3f(0.55, 0.27, 0.07)
+            glTranslatef(0, 10, 0)
+            glRotatef(90, 1, 0, 0)
+            gluCylinder(gluNewQuadric(), 5, 5, 25, 8, 2)
+            
+            # Leaves
+            glColor3f(0.0, 0.5, 0.0)
+            glTranslatef(0, 0, -30)
+            glutSolidCone(20, 40, 8, 8)
+        elif obstacle['type'] == 'barrier':
+            # Draw a barrier
+            glColor3f(0.6, 0.3, 0.1)
+            glScalef(LANE_WIDTH*0.8, 15, 5)
+            glutSolidCube(1)
+        elif obstacle['type'] == 'low_barrier':
+            # Draw a low barrier that can be ducked under
+            glColor3f(0.6, 0.3, 0.1)
+            glScalef(LANE_WIDTH*0.8, 8, 5)  # Lower height for ducking
+            glutSolidCube(1)
+        
+        glPopMatrix()
+
 
 
 def draw_coins():
