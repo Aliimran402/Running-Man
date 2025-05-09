@@ -1,59 +1,56 @@
 #cse423_project
     #runnning_man
 
-from OpenGL.GL import*
-from OpenGL.GLU import*
-from OpenGL.GLUT import*
+from OpenGL.GL import *
+from OpenGL.GLUT import *
+from OpenGL.GLU import *
 import random
-import time
 import math
+import time
 
+GAME_RUNNING = 0
+GAME_OVER = 1
+GAME_PAUSED = 2
+game_state = GAME_RUNNING
 
-GAME_RUNNING=0
-GAME_OVER=1
-GAME_PAUSED=2
-game_status=GAME_RUNNING
-
-player_lane = 1  
+player_lane = 1
 player_jumping = False
 jump_height = 0.5
-jump_velocity = 0.9 
-JUMP_INITIAL_VELOCITY = 8  
-GRAVITY = 0.21 
-JUMP_WINDOW = 30  
+jump_velocity = 0.9
+JUMP_INITIAL_VELOCITY = 8
+GRAVITY = 0.21
+JUMP_WINDOW = 30
 LANE_WIDTH = 60
 
-PATH_SEGMENT_LENGTH = 500 
-path_segments = []  
-MAX_VISIBLE_SEGMENTS = 10  
-total_distance = 0  
-current_direction = 0 
+PATH_SEGMENT_LENGTH = 500
+path_segments = []
+MAX_VISIBLE_SEGMENTS = 10
+total_distance = 0
+current_direction = 0
 
-obstacles = []  
-coins = []  
-OBSTACLE_PROBABILITY = 5.0  
-COIN_PROBABILITY = 0.8  
-OBSTACLE_DENSITY_FACTOR = 0.005  
+obstacles = []
+coins = []
+OBSTACLE_PROBABILITY = 5.0
+COIN_PROBABILITY = 0.8
+OBSTACLE_DENSITY_FACTOR = 0.005
 
-score = 0  
+score = 0
 coins_collected = 0
-game_speed = 2.5 
-stored_game_speed = 2.0  
+game_speed = 2.0
+stored_game_speed = 2.0
 MAX_SPEED = 10.0
-SPEED_INCREMENT = 0.15 
+SPEED_INCREMENT = 0.15
 game_start_time = time.time()
 
-
 POWERUP_TYPES = ['magnet', 'shield']
-POWERUP_PROBABILITY = 0.05  
-POWERUP_DURATION = 10  
+POWERUP_PROBABILITY = 0.05
+POWERUP_DURATION = 10
 active_powerups = {
     'magnet': {'active': False, 'end_time': 0},
     'shield': {'active': False, 'end_time': 0}
 }
-powerups = []  
-MAGNET_RANGE = 150  
-
+powerups = []
+MAGNET_RANGE = 150
 
 COLORS = {
     'temple_stone': (0.7, 0.65, 0.5),
@@ -62,8 +59,8 @@ COLORS = {
     'coin': (1.0, 0.84, 0.0),
     'sky': (0.5, 0.7, 1.0),
     'text': (1.0, 1.0, 1.0),
-    'magnet': (0.0, 0.7, 1.0), 
-    'shield': (0.0, 1.0, 0.7)   
+    'magnet': (0.0, 0.7, 1.0),
+    'shield': (0.0, 1.0, 0.7)
 }
 
 
@@ -187,7 +184,6 @@ def draw_text(x, y, text, font=GLUT_BITMAP_HELVETICA_18):
     glMatrixMode(GL_PROJECTION)
     glPopMatrix()
     glMatrixMode(GL_MODELVIEW)
-    
        
 
 def draw_player():
@@ -423,9 +419,9 @@ def draw_coins():
             
             glTranslatef(coin['x'], 10, coin['z'])
             glRotatef(coin['angle'], 0, 1, 0)
-                      
+            
             glRotatef(90, 1, 0, 0)
-                   
+            
             current_time = time.time() % 360
             glRotatef(current_time * 50, 0, 0, 1)
             
@@ -433,7 +429,7 @@ def draw_coins():
             
             gluDisk(gluNewQuadric(), 0, 10, 15, 1)
             
-            glPopMatrix()    
+            glPopMatrix()
     
 def draw_powerups():
     global powerups
@@ -444,21 +440,20 @@ def draw_powerups():
             
             glTranslatef(powerup['x'], 15, powerup['z'])
             glRotatef(powerup['angle'], 0, 1, 0)
-                       
+            
             current_time = time.time()
-            float_height = 5 * math.sin(current_time * 3) 
+            float_height = 5 * math.sin(current_time * 3)
             glTranslatef(0, float_height, 0)
-            glRotatef(current_time * 100, 0, 1, 0)             
+            glRotatef(current_time * 100, 0, 1, 0)
             
             if powerup['type'] == 'magnet':
-                glColor3f(*COLORS['magnet'])                
+                glColor3f(*COLORS['magnet'])
                 glutSolidCube(15)
-                
-            else:  
-                glColor3f(*COLORS['shield'])              
+            else:
+                glColor3f(*COLORS['shield'])
                 glutSolidSphere(10, 16, 16)
             
-            glPopMatrix()    
+            glPopMatrix()
 
 def draw_background():
     glPushMatrix()
@@ -518,7 +513,7 @@ def draw_background():
 def draw_game_over_screen():
     draw_text(400, 400, "GAME OVER", GLUT_BITMAP_TIMES_ROMAN_24)
     draw_text(350, 350, f"Coins Collected: {coins_collected}", GLUT_BITMAP_HELVETICA_18)
-    draw_text(350, 290, "Press 'R' to restart", GLUT_BITMAP_HELVETICA_18)    
+    draw_text(350, 290, "Press 'R' to restart", GLUT_BITMAP_HELVETICA_18)   
             
     
 def update_game():
@@ -567,7 +562,8 @@ def update_game():
     for powerup in powerups:
         if not powerup['collected']:
             dx = abs(player_x - powerup['x'])
-            dz = abs(powerup['z'])           
+            dz = abs(powerup['z'])
+            
             if dx < 30 and dz < 30:
                 powerup['collected'] = True
                 active_powerups[powerup['type']]['active'] = True
@@ -583,7 +579,8 @@ def update_game():
             if not coin['collected']:
                 dx = player_x - coin['x']
                 dz = -coin['z']
-                distance = math.sqrt(dx*dx + dz*dz)                
+                distance = math.sqrt(dx*dx + dz*dz)
+                
                 if distance < MAGNET_RANGE:
                     move_speed = 5.0
                     if distance > 0:
@@ -593,14 +590,15 @@ def update_game():
     if not active_powerups['shield']['active']:
         for obstacle in obstacles:
             dx = abs(player_x - obstacle['x'])
-            dz = abs(obstacle['z'])            
+            dz = abs(obstacle['z'])
+            
             if dx < 30 and dz < JUMP_WINDOW:
                 if obstacle['type'] == 'rock' and jump_height > 10:
                     continue
                 elif obstacle['type'] == 'tree' and jump_height > 20:
                     continue
-                #elif obstacle['type'] == 'low_barrier' and player_jumping:
-                    #continue
+                elif obstacle['type'] == 'low_barrier' and player_jumping:
+                    continue
                 
                 game_state = GAME_OVER
     
@@ -627,7 +625,7 @@ def handle_movement(direction):
 
 
 
-def keyboard_listener(key): 
+def keyboardListener(key): 
     global player_lane, player_jumping, jump_velocity, game_state, game_speed, stored_game_speed
     
     if game_state == GAME_OVER:
@@ -662,7 +660,7 @@ def keyboard_listener(key):
    
 
 
-def specialkey_listener(key): 
+def specialKeyListener(key): 
     global player_lane, player_jumping, jump_velocity, game_state
     
     if game_state == GAME_OVER:
@@ -682,7 +680,7 @@ def specialkey_listener(key):
 
 
 def  setup_camera(): 
-    global camera_pos, player_lane, jump_height
+    global  player_lane, jump_height
     
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
@@ -709,7 +707,7 @@ def idle():
     glutPostRedisplay()
 
 
-def show_screen():
+def showScreen():
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     glLoadIdentity()
     glViewport(0, 0, 1000, 800)
@@ -738,13 +736,21 @@ def show_screen():
                 y_offset -= 30
     elif game_state == GAME_PAUSED:
         draw_text(400, 400, "GAME PAUSED", GLUT_BITMAP_TIMES_ROMAN_24)
-        draw_text(350, 350, "Press 'P' to resume", GLUT_BITMAP_HELVETICA_18)    
+        draw_text(350, 350, "Press 'P' to resume", GLUT_BITMAP_HELVETICA_18)
+    else:
+        draw_game_over_screen()
+    
+    draw_text(800, 730, "A/D: Move")
+    draw_text(800, 710, "W: Jump")
+    draw_text(800, 690, "R: Restart")
+    draw_text(800, 670, "P: Pause/Resume")
+    
+    glutSwapBuffers()
     
 
 
 
 def main():
-    """Main function to set up OpenGL window and loop"""
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
     glutInitWindowSize(1000, 800)
@@ -757,16 +763,15 @@ def main():
     
     glEnable(GL_COLOR_MATERIAL)
     
-    glutDisplayFunc(show_screen)
-    glutKeyboardFunc(keyboard_listener)
-    glutSpecialFunc(specialkey_listener)
+    glutDisplayFunc(showScreen)
+    glutKeyboardFunc(keyboardListener)
+    glutSpecialFunc(specialKeyListener)
     glutIdleFunc(idle)
-      
+    
     reset_game()
     
     glutMainLoop()
 
 if __name__ == "__main__":
     main()
-
     
