@@ -24,7 +24,6 @@ GRAVITY = 0.21
 JUMP_WINDOW = 30  
 LANE_WIDTH = 60
 
-
 PATH_SEGMENT_LENGTH = 500 
 path_segments = []  
 MAX_VISIBLE_SEGMENTS = 10  
@@ -706,7 +705,7 @@ def  setup_camera():
 
     
 
-def idle(): #functions keeps running in backgound
+def idle(): 
     update_game()
     glutPostRedisplay()
 
