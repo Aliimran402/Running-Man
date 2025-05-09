@@ -4,50 +4,79 @@
 from OpenGL.GL import*
 from OpenGL.GLU import*
 from OpenGL.GLUT import*
-from OpenGL.GLUT import GLUT_BITMAP_HELVETICA_18
 import random
 import time
 import math
 
-
-camera_position= (0,50,200)
-camera_tracking=(0,0,0)
 
 GAME_RUNNING=0
 GAME_OVER=1
 GAME_PAUSED=2
 game_status=GAME_RUNNING
 
-player_position=(0,0,0)
-player_lane=1
-player_jumping=False
-player_sliding=False
-slide_timer=0
-slide_duration=1.5
-jump_height=0.0
-jump_velocity=0.0
-JUMP_INITIAL_VELOCITY=12
-GRAVITY=0.5
-JUMP_WINDOW=40
-LANE_WIDTH=60
-
-PATH_SEGMENT_LENGTH=10
-path_segments=[]
-MAX_VISIBLE_SEGMENTS=10
-total_distance=0.0
-
-score=0
-coins_collected=0
-game_speed=0.3
-MAX_SPEED=5.0
-SPEED_INCREMENT=0.05
-game_start_time=time.time()
+player_lane = 1  
+player_jumping = False
+jump_height = 0.5
+jump_velocity = 0.9 
+JUMP_INITIAL_VELOCITY = 8  
+GRAVITY = 0.21 
+JUMP_WINDOW = 30  
+LANE_WIDTH = 60
 
 
+PATH_SEGMENT_LENGTH = 500 
+path_segments = []  
+MAX_VISIBLE_SEGMENTS = 10  
+total_distance = 0  
+current_direction = 0 
+
+obstacles = []  
+coins = []  
+OBSTACLE_PROBABILITY = 5.0  
+COIN_PROBABILITY = 0.8  
+OBSTACLE_DENSITY_FACTOR = 0.005  
+
+score = 0  
+coins_collected = 0
+game_speed = 2.0 
+stored_game_speed = 2.0  
+MAX_SPEED = 10.0
+SPEED_INCREMENT = 0.15 
+game_start_time = time.time()
 
 
+POWERUP_TYPES = ['magnet', 'shield']
+POWERUP_PROBABILITY = 0.05  
+POWERUP_DURATION = 10  
+active_powerups = {
+    'magnet': {'active': False, 'end_time': 0},
+    'shield': {'active': False, 'end_time': 0}
+}
+powerups = []  
+MAGNET_RANGE = 150  
 
 
+COLORS = {
+    'temple_stone': (0.7, 0.65, 0.5),
+    'path': (0.6, 0.5, 0.4),
+    'obstacle': (0.8, 0.2, 0.2),
+    'coin': (1.0, 0.84, 0.0),
+    'sky': (0.5, 0.7, 1.0),
+    'text': (1.0, 1.0, 1.0),
+    'magnet': (0.0, 0.7, 1.0), 
+    'shield': (0.0, 1.0, 0.7)   
+}
+
+
+def reset_game():
+    
+    
+def generate_path_segment():
+    
+    
+def draw_text(): 
+    
+       
 
 def draw_player():
     global player_lane, jump_height, player_sliding
@@ -240,10 +269,29 @@ def draw_player():
     glPopMatrix()
 
 
-def draw_text(): #displays text on the screen
+
+def draw_path():
+    
+    
+def draw_obstacles():    
 
 
-def draw_shapes():
+def draw_coins():
+    
+def draw_powerups():
+    
+
+def draw_background():
+    
+
+def draw_game_over_screen():
+    
+            
+    
+def update_game():
+    
+
+def handle_movement():                    
 
 
 
@@ -251,14 +299,13 @@ def keyboard_listener(): #keyborad inputs
    
 
 
-def special_key_listener(): #special key inputs
+def specialkey_listener(): #special key inputs
 
 
 
 def  setup_camera(): #viewing camera 3rd person view
 
 
-def update_game():
     
 
 def idle(): #functions keeps running in backgound
@@ -272,19 +319,27 @@ def show_screen(): #displays the screen
 
 
 def main():
+    """Main function to set up OpenGL window and loop"""
     glutInit()
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)  # Double buffering, RGB color, depth test
-    glutInitWindowSize(1000, 800)  # Window size
-    glutInitWindowPosition(0, 0)  # Window position
-    wind = glutCreateWindow(b"3D OpenGL Intro")  # Create the window
-
-    glutDisplayFunc(show_screen)  # Register display function
-    glutKeyboardFunc(keyboard_listener)  # Register keyboard listener
-    glutSpecialFunc(special_key_listener)
-    #glutMouseFunc(mouse_listener)
-    glutIdleFunc(idle)  # Register the idle function to move the bullet automatically
-
-    glutMainLoop()  # Enter the GLUT main loop
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
+    glutInitWindowSize(1000, 800)
+    glutInitWindowPosition(0, 0)
+    wind = glutCreateWindow(b"Running Man OpenGL")
+    
+    glEnable(GL_DEPTH_TEST)
+    
+    glClearColor(0.2, 0.2, 0.2, 1.0)
+    
+    glEnable(GL_COLOR_MATERIAL)
+    
+    glutDisplayFunc(show_screen)
+    glutKeyboardFunc(keyboard_listener)
+    glutSpecialFunc(specialkey_listener)
+    glutIdleFunc(idle)
+      
+    reset_game()
+    
+    glutMainLoop()
 
 if __name__ == "__main__":
     main()
