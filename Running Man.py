@@ -499,7 +499,9 @@ def draw_background():
     
 
 def draw_game_over_screen():
-    
+    draw_text(400, 400, "GAME OVER", GLUT_BITMAP_TIMES_ROMAN_24)
+    draw_text(350, 350, f"Coins Collected: {coins_collected}", GLUT_BITMAP_HELVETICA_18)
+    draw_text(350, 290, "Press 'R' to restart", GLUT_BITMAP_HELVETICA_18)    
             
     
 def update_game():
@@ -608,7 +610,7 @@ def handle_movement(direction):
 
 
 
-def keyboard_listener(): 
+def keyboard_listener(key): 
     global player_lane, player_jumping, jump_velocity, game_state, game_speed, stored_game_speed
     
     if game_state == GAME_OVER:
@@ -643,8 +645,23 @@ def keyboard_listener():
    
 
 
-def specialkey_listener(): 
-
+def specialkey_listener(key): 
+    global player_lane, player_jumping, jump_velocity, game_state
+    
+    if game_state == GAME_OVER:
+        return
+    
+    if game_state != GAME_RUNNING:
+        return
+    
+    if key == GLUT_KEY_LEFT:
+        handle_movement('left')
+    elif key == GLUT_KEY_RIGHT:
+        handle_movement('right')
+    
+    if key == GLUT_KEY_UP and not player_jumping:
+        player_jumping = True
+        jump_velocity = JUMP_INITIAL_VELOCITY
 
 
 def  setup_camera(): 
