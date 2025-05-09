@@ -673,7 +673,8 @@ def keyboardListener(key):
    
 
 
-def specialKeyListener(key): 
+
+def specialKeyListener(key, x, y):
     global player_lane, player_jumping, jump_velocity, game_state
     
     if game_state == GAME_OVER:
