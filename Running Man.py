@@ -638,7 +638,7 @@ def handle_movement(direction):
 
 
 
-def keyboardListener(key): 
+def keyboardListener(key,x,y):
     global player_lane, player_jumping, jump_velocity, game_state, game_speed, stored_game_speed
     
     if game_state == GAME_OVER:
@@ -670,11 +670,8 @@ def keyboardListener(key):
     
     if key == b'r':
         reset_game()
-   
 
-
-
-def specialKeyListener(key, x, y):
+def specialKeyListener(key,x,y):
     global player_lane, player_jumping, jump_velocity, game_state
     
     if game_state == GAME_OVER:
@@ -772,7 +769,7 @@ def main():
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
     glutInitWindowSize(1000, 800)
     glutInitWindowPosition(0, 0)
-    wind = glutCreateWindow(b"Running Man OpenGL")
+    winddow = glutCreateWindow(b"Running Man OpenGL")
     
     glEnable(GL_DEPTH_TEST)
     
