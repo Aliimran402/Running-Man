@@ -730,9 +730,9 @@ def showScreen():
     glLoadIdentity()
     glViewport(0, 0, 1000, 800)
     
-    setupCamera()
+    setup_camera()
     
-    draw_skybox()
+    draw_background()
     
     draw_path()
     draw_obstacles()
@@ -763,13 +763,12 @@ def showScreen():
     draw_text(800, 690, "R: Restart")
     draw_text(800, 670, "P: Pause/Resume")
     
-    glutSwapBuffers()  
-    
+    glutSwapBuffers()
 
 
 
 def main():
-    """Main function to set up OpenGL window and loop"""
+   
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH)
     glutInitWindowSize(1000, 800)
