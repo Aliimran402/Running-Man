@@ -102,6 +102,71 @@ def reset_game():
     total_distance = 0
     
 def generate_path_segment():
+    global path_segments, current_direction
+    
+    if len(path_segments) == 0:
+        segment_z = -PATH_SEGMENT_LENGTH / 2
+        segment_x = 0
+        segment_angle = 0
+    else:
+        prev_segment = path_segments[-1]
+        segment_z = prev_segment['z'] - PATH_SEGMENT_LENGTH
+        segment_x = 0
+        segment_angle = 0
+    
+    segment = {
+        'x': segment_x,
+        'z': segment_z,
+        'angle': segment_angle
+    }
+    path_segments.append(segment)
+    
+    current_obstacle_prob = min(OBSTACLE_PROBABILITY + total_distance * OBSTACLE_DENSITY_FACTOR, 0.5)
+    
+    if random.random() < current_obstacle_prob and len(path_segments) > 3:
+        obstacle_lane = random.randint(0, 2)
+        obstacle_z_offset = random.uniform(-PATH_SEGMENT_LENGTH/2, PATH_SEGMENT_LENGTH/2)
+        obstacle_type = random.choice(['rock', 'tree'])
+        obstacle_x = (obstacle_lane - 1) * LANE_WIDTH
+        obstacle_z = segment_z + obstacle_z_offset
+        
+        obstacles.append({
+            'x': obstacle_x,
+            'z': obstacle_z,
+            'lane': obstacle_lane,
+            'type': obstacle_type,
+            'angle': segment_angle
+        })
+    
+    if random.random() < COIN_PROBABILITY and len(path_segments) > 3:
+        coin_lane = random.randint(0, 2)
+        coin_z_offset = random.uniform(-PATH_SEGMENT_LENGTH/2, PATH_SEGMENT_LENGTH/2)
+        coin_x = (coin_lane - 1) * LANE_WIDTH
+        coin_z = segment_z + coin_z_offset
+        
+        coins.append({
+            'x': coin_x,
+            'z': coin_z,
+            'lane': coin_lane,
+            'collected': False,
+            'angle': segment_angle
+        })
+    
+    if random.random() < POWERUP_PROBABILITY and len(path_segments) > 3:
+        powerup_lane = random.randint(0, 2)
+        powerup_z_offset = random.uniform(-PATH_SEGMENT_LENGTH/2, PATH_SEGMENT_LENGTH/2)
+        powerup_type = random.choice(POWERUP_TYPES)
+        powerup_x = (powerup_lane - 1) * LANE_WIDTH
+        powerup_z = segment_z + powerup_z_offset
+        
+        powerups.append({
+            'x': powerup_x,
+            'z': powerup_z,
+            'lane': powerup_lane,
+            'type': powerup_type,
+            'collected': False,
+            'angle': segment_angle
+        })
     
     
 def draw_text(): 
