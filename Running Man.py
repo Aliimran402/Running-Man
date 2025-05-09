@@ -277,65 +277,52 @@ def draw_obstacles():
 
 
 def draw_coins():
+    global coins
+    
+    for coin in coins:
+        if not coin['collected']:
+            glPushMatrix()
+            
+            glTranslatef(coin['x'], 10, coin['z'])
+            glRotatef(coin['angle'], 0, 1, 0)
+                      
+            glRotatef(90, 1, 0, 0)
+                   
+            current_time = time.time() % 360
+            glRotatef(current_time * 50, 0, 0, 1)
+            
+            glColor3f(*COLORS['coin'])
+            
+            gluDisk(gluNewQuadric(), 0, 10, 15, 1)
+            
+            glPopMatrix()    
     
 def draw_powerups():
+    global powerups
     
+    for powerup in powerups:
+        if not powerup['collected']:
+            glPushMatrix()
+            
+            glTranslatef(powerup['x'], 15, powerup['z'])
+            glRotatef(powerup['angle'], 0, 1, 0)
+                       
+            current_time = time.time()
+            float_height = 5 * math.sin(current_time * 3) 
+            glTranslatef(0, float_height, 0)
+            glRotatef(current_time * 100, 0, 1, 0)             
+            
+            if powerup['type'] == 'magnet':
+                glColor3f(*COLORS['magnet'])                
+                glutSolidCube(15)
+                
+            else:  
+                glColor3f(*COLORS['shield'])              
+                glutSolidSphere(10, 16, 16)
+            
+            glPopMatrix()    
 
 def draw_background():
-    glPushMatrix()
-    glDisable(GL_DEPTH_TEST)
-    radius = 1000
-    glBegin(GL_TRIANGLE_FAN)
-    glColor3f(0.53, 0.81, 0.92)
-    glVertex3f(0, radius, 0)
-    slices = 20
-    stacks = 10
-    for i in range(slices + 1):
-        angle = 2.0 * math.pi * i / slices
-        x = math.cos(angle)
-        z = math.sin(angle)
-        glColor3f(0.4, 0.7, 0.9)
-        glVertex3f(radius * x, 0, radius * z)
-    glEnd()
-    glBegin(GL_QUADS)
-    path_width = LANE_WIDTH * 3
-    ocean_width = 800
-    ocean_length = 2000
-    glColor3f(0.0, 0.6, 0.8)
-    glVertex3f(-path_width/2 - ocean_width, -15, -ocean_length)
-    glVertex3f(-path_width/2, -15, -ocean_length)
-    glColor3f(0.0, 0.4, 0.8)
-    glVertex3f(-path_width/2, -15, ocean_length)
-    glVertex3f(-path_width/2 - ocean_width, -15, ocean_length)
-    glColor3f(0.0, 0.6, 0.8)
-    glVertex3f(path_width/2, -15, -ocean_length)
-    glVertex3f(path_width/2 + ocean_width, -15, -ocean_length)
-    glColor3f(0.0, 0.4, 0.8)
-    glVertex3f(path_width/2 + ocean_width, -15, ocean_length)
-    glVertex3f(path_width/2, -15, ocean_length)
-    glEnd()
-    num_waves = 20
-    wave_width = ocean_width / num_waves
-    glBegin(GL_LINES)
-    glColor3f(0.3, 0.7, 0.9)
-    for i in range(num_waves):
-        for z in range(-ocean_length, ocean_length, 100):
-            wave_offset = math.sin(time.time() * 2 + i * 0.5) * 5
-            x1 = -path_width/2 - (i * wave_width)
-            x2 = -path_width/2 - ((i+1) * wave_width)
-            glVertex3f(x1, -15 + wave_offset, z)
-            glVertex3f(x2, -15 + wave_offset, z)
-    for i in range(num_waves):
-        for z in range(-ocean_length, ocean_length, 100):
-            wave_offset = math.sin(time.time() * 2 + i * 0.5) * 5
-            x1 = path_width/2 + (i * wave_width)
-            x2 = path_width/2 + ((i+1) * wave_width)
-            glVertex3f(x1, -15 + wave_offset, z)
-            glVertex3f(x2, -15 + wave_offset, z)
-    glEnd()
-    glEnable(GL_DEPTH_TEST)
-    glPopMatrix()
-
     
 
 def draw_game_over_screen():
