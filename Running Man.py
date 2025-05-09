@@ -14,7 +14,6 @@ GAME_OVER=1
 GAME_PAUSED=2
 game_status=GAME_RUNNING
 
-player_pos = (0, 0, 0)
 player_lane = 1  
 player_jumping = False
 jump_height = 0.5
