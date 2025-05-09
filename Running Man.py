@@ -14,6 +14,7 @@ GAME_OVER=1
 GAME_PAUSED=2
 game_status=GAME_RUNNING
 
+player_pos = (0, 0, 0)
 player_lane = 1  
 player_jumping = False
 jump_height = 0.5
@@ -69,12 +70,13 @@ COLORS = {
 
 
 def reset_game():
-    global game_state, player_lane, player_jumping
+    global game_state, player_pos, player_lane, player_jumping
     global jump_height, jump_velocity, path_segments, obstacles, coins, powerups
     global score, coins_collected, game_speed, game_start_time, total_distance
-    global active_powerups
+    global current_direction, active_powerups
     
     game_state = GAME_RUNNING
+    player_pos = (0, 0, 0)
     player_lane = 1
     player_jumping = False
     jump_height = 0
@@ -95,7 +97,7 @@ def reset_game():
     
     score = 0
     coins_collected = 0
-    game_speed = 0.3
+    game_speed = 2.0
     game_start_time = time.time()
     total_distance = 0
     
@@ -103,25 +105,6 @@ def generate_path_segment():
     
     
 def draw_text(): 
-    glColor3f(*COLORS['text'])
-    glMatrixMode(GL_PROJECTION)
-    glPushMatrix()
-    glLoadIdentity()
-    
-    gluOrtho2D(0, 1000, 0, 800)
-    
-    glMatrixMode(GL_MODELVIEW)
-    glPushMatrix()
-    glLoadIdentity()
-    
-    glRasterPos2f(x, y)
-    for ch in text:
-        glutBitmapCharacter(font, ord(ch))
-    
-    glPopMatrix()
-    glMatrixMode(GL_PROJECTION)
-    glPopMatrix()
-    glMatrixMode(GL_MODELVIEW)
     
        
 
@@ -551,47 +534,11 @@ def update_game():
                       
     
 
-def handle_movement():  
-    global player_lane
-    if direction == 'left' and player_lane > 0:
-        player_lane -= 1
-    elif direction == 'right' and player_lane < 2:
-        player_lane += 1
+def handle_movement():                    
 
 
 
-def keyboard_listener():
-    global player_lane, player_jumping, jump_velocity, game_state, game_speed, stored_game_speed
-    
-    if game_state == GAME_OVER:
-        if key == b'r':
-            reset_game()
-        return
-    
-    if key == b'p':
-        if game_state == GAME_RUNNING:
-            game_state = GAME_PAUSED
-            stored_game_speed = game_speed
-            game_speed = 0
-        else:
-            game_state = GAME_RUNNING
-            game_speed = stored_game_speed
-        return
-    
-    if game_state != GAME_RUNNING:
-        return
-    
-    if key == b'a':
-        handle_movement('left')
-    elif key == b'd':
-        handle_movement('right')
-    
-    if (key == b'w' or key == b' ') and not player_jumping:
-        player_jumping = True
-        jump_velocity = JUMP_INITIAL_VELOCITY
-    
-    if key == b'r':
-        reset_game()
+def keyboard_listener(): #keyborad inputs
    
 
 
@@ -609,7 +556,36 @@ def idle(): #functions keeps running in backgound
     glutPostRedisplay()
 
 
-def show_screen(): #displays the screen
+def show_screen():
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    glLoadIdentity()
+    glViewport(0, 0, 1000, 800)
+    
+    setup_camera()
+    
+    draw_background()
+    
+    draw_path()
+    draw_obstacles()
+    draw_coins()
+    draw_player()
+    draw_powerups()
+    
+    if game_state == GAME_RUNNING:
+        draw_text(10, 730, f"Score: {score}")
+        draw_text(10, 700, f"Coins: {coins_collected}")
+        draw_text(10, 670, f"Speed: {game_speed:.1f}")
+        
+        y_offset = 640
+        current_time = time.time()
+        for powerup_type in POWERUP_TYPES:
+            if active_powerups[powerup_type]['active']:
+                remaining_time = max(0, int(active_powerups[powerup_type]['end_time'] - current_time))
+                draw_text(10, y_offset, f"{powerup_type.capitalize()} Power-Up: {remaining_time}s")
+                y_offset -= 30
+    elif game_state == GAME_PAUSED:
+        draw_text(400, 400, "GAME PAUSED", GLUT_BITMAP_TIMES_ROMAN_24)
+        draw_text(350, 350, "Press 'P' to resume", GLUT_BITMAP_HELVETICA_18)    
     
 
 
