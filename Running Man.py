@@ -539,6 +539,37 @@ def handle_movement():
 
 
 def keyboard_listener(): 
+    global player_lane, player_jumping, jump_velocity, game_state, game_speed, stored_game_speed
+    
+    if game_state == GAME_OVER:
+        if key == b'r':
+            reset_game()
+        return
+    
+    if key == b'p':
+        if game_state == GAME_RUNNING:
+            game_state = GAME_PAUSED
+            stored_game_speed = game_speed
+            game_speed = 0
+        else:
+            game_state = GAME_RUNNING
+            game_speed = stored_game_speed
+        return
+    
+    if game_state != GAME_RUNNING:
+        return
+    
+    if key == b'a':
+        handle_movement('left')
+    elif key == b'd':
+        handle_movement('right')
+    
+    if (key == b'w' or key == b' ') and not player_jumping:
+        player_jumping = True
+        jump_velocity = JUMP_INITIAL_VELOCITY
+    
+    if key == b'r':
+        reset_game()
    
 
 
