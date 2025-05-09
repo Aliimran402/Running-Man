@@ -1,5 +1,5 @@
 #cse423_project
-#runnning_man
+    #runnning_man
 
 from OpenGL.GL import*
 from OpenGL.GLU import*
