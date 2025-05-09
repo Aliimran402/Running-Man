@@ -599,7 +599,7 @@ def update_game():
                       
     
 
-def handle_movement():   
+def handle_movement(direction):   
     global player_lane
     if direction == 'left' and player_lane > 0:
         player_lane -= 1
